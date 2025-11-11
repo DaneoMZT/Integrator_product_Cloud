@@ -51,7 +51,7 @@
           <tr>
             <td><?= htmlspecialchars($row['id']) ?></td>
             <td>
-              <img src="assets/movie_<?= $row['id'] ?>.jpg" 
+              <img src="assets/The_Matrix<?= $row['id'] ?>.jpg" 
                    alt="<?= htmlspecialchars($row['title']) ?>">
             </td>
             <td><?= htmlspecialchars($row['title']) ?></td>
