@@ -1,81 +1,60 @@
-<?php
-require 'db.php';
-
-// ---------------------------------------------
-// Agregar película si se envió formulario
-// ---------------------------------------------
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_movie'])) {
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $year = $_POST['year'];
-
-    $stmt = $conn->prepare("INSERT INTO movies (title, description, year) VALUES (?, ?, ?)");
-    $stmt->bind_param("ssi", $title, $description, $year);
-    $stmt->execute();
-}
-
-// ---------------------------------------------
-// Obtener todas las películas
-// ---------------------------------------------
-$sql = "SELECT id, title, description, year FROM movies ORDER BY id DESC";
-$result = $conn->query($sql);
-?>
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="en" data-beasties-container>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catálogo de Películas 🎬</title>
+  <meta charset="utf-8">
+  <title>Catalogo_Peliculas</title>
+  <base href="./">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="#">
 <style>
-body { font-family: Arial, sans-serif; background: #111; color: #fff; text-align: center; padding: 20px;}
-table { width: 80%; margin: 20px auto; border-collapse: collapse;}
-th, td { padding: 12px; border: 1px solid #555;}
-th { background-color: #333;}
-tr:nth-child(even) { background-color: #222;}
-form input { padding: 8px; margin: 5px; width: 200px;}
-form button { padding: 8px 16px; margin-top: 5px;}
-a { color: #0d6efd; text-decoration: none; margin: 0 5px;}
-a:hover { text-decoration: underline;}
+/* ... aquí va todo tu CSS actual sin cambios ... */
 </style>
+<link rel="stylesheet" href="styles-M6P3YWOE.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="styles-M6P3YWOE.css"></noscript>
 </head>
 <body>
+  <app-root></app-root>
 
-<h1>🎥 Catálogo de Películas</h1>
+  <!-- 🔹 Tabla de películas usando PHP -->
+  <?php
+  require 'db.php'; // Ajusta la ruta si db.php está en otra carpeta
+  $sql = "SELECT id, title, description, year FROM movies";
+  $result = $conn->query($sql);
+  ?>
+  <div id="movies-container" style="width:80%; margin:20px auto; color:#fff;">
+    <h2>🎥 Catálogo de Películas</h2>
+    <?php if ($result && $result->num_rows > 0): ?>
+      <table style="width:100%; border-collapse: collapse; color:#fff; margin-top: 10px;">
+        <tr style="background-color:#333;">
+          <th>ID</th>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Año</th>
+        </tr>
+        <?php while ($row = $result->fetch_assoc()): ?>
+          <tr style="background-color:#222;">
+            <td><?= htmlspecialchars($row['id']) ?></td>
+            <td><?= htmlspecialchars($row['title']) ?></td>
+            <td><?= htmlspecialchars($row['description']) ?></td>
+            <td><?= htmlspecialchars($row['year']) ?></td>
+          </tr>
+        <?php endwhile; ?>
+      </table>
+    <?php else: ?>
+      <p>No hay películas registradas.</p>
+    <?php endif; ?>
+  </div>
 
-<h3>Agregar Nueva Película</h3>
-<form method="POST" action="">
-    <input type="text" name="title" placeholder="Título" required>
-    <input type="text" name="description" placeholder="Descripción" required>
-    <input type="number" name="year" placeholder="Año" required>
-    <button type="submit" name="add_movie">Agregar</button>
-</form>
-
-<?php if ($result && $result->num_rows > 0): ?>
-<table>
-<tr>
-<th>ID</th>
-<th>Título</th>
-<th>Descripción</th>
-<th>Año</th>
-<th>Acciones</th>
-</tr>
-<?php while ($row = $result->fetch_assoc()): ?>
-<tr>
-<td><?= htmlspecialchars($row['id']) ?></td>
-<td><?= htmlspecialchars($row['title']) ?></td>
-<td><?= htmlspecialchars($row['description']) ?></td>
-<td><?= htmlspecialchars($row['year']) ?></td>
-<td>
-<a href="edit_movie.php?id=<?= $row['id'] ?>">✏️ Editar</a>
-<a href="delete_movie.php?id=<?= $row['id'] ?>" onclick="return confirm('¿Eliminar película?')">🗑️ Eliminar</a>
-</td>
-</tr>
-<?php endwhile; ?>
-</table>
-<?php else: ?>
-<p>No hay películas registradas.</p>
-<?php endif; ?>
-
+<script src="polyfills-B6TNHZQ6.js" type="module"></script>
+<script src="scripts-SQ7W6IC7.js" defer></script>
+<script src="main-E3VRN7CM.js" type="module"></script>
 </body>
+<footer>
+  <div class="footer-content">
+    <p>© 2025 Catálogo de Películas 🎬 | Desarrollado por <strong>Daniel Ruiz Beltrán</strong></p>
+    <p>Materia: <strong>Conceptualización de entornos de desarrollo de aplicaciones y servicios</strong></p>
+    <p>Código: <strong>399426381</strong></p>
+    <p>Correo: <a href="mailto:ruizdaneo@gmail.com">ruizdaneo@gmail.com</a></p>
+  </div>
+</footer>
 </html>
-<?php $conn->close(); ?>
