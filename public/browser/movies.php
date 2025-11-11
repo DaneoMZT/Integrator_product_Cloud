@@ -1,5 +1,4 @@
 <?php
-// 🔹 Incluir la conexión a la base de datos usando db.php
 require 'db.php';
 
 // 🔹 Configurar cabecera para JSON
@@ -20,6 +19,5 @@ if ($result && $result->num_rows > 0) {
 // 🔹 Devolver JSON
 echo json_encode($movies, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
-// Cerrar conexión
 $conn->close();
 ?>

@@ -6,18 +6,18 @@
   <base href="./">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="#">
-<style>
-/* ... aquí va todo tu CSS actual sin cambios ... */
-</style>
-<link rel="stylesheet" href="styles-M6P3YWOE.css" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="styles-M6P3YWOE.css"></noscript>
+  <style>
+    /* ... aquí va todo tu CSS actual sin cambios ... */
+  </style>
+  <link rel="stylesheet" href="styles-M6P3YWOE.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="styles-M6P3YWOE.css"></noscript>
 </head>
 <body>
   <app-root></app-root>
 
   <!-- 🔹 Tabla de películas usando PHP -->
   <?php
-  require 'db.php'; // Ajusta la ruta si db.php está en otra carpeta
+  require 'db.php'; // Conexión remota a Railway
   $sql = "SELECT id, title, description, year FROM movies";
   $result = $conn->query($sql);
   ?>
