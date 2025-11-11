@@ -1,20 +1,6 @@
 <?php
-// ---------------------------------------------
-// 🔹 CONFIGURACIÓN DE CONEXIÓN A RAILWAY MYSQL
-// ---------------------------------------------
-$host = 'switchyard.proxy.rlwy.net';
-$port = 12014;
-$user = 'root';
-$password = 'TaqXGlSrbEExYMYKCrhcvSxSIrMuMbFT';
-$database = 'railway';
-
-// Crear conexión
-$conn = new mysqli($host, $user, $password, $database, $port);
-
-// Verificar conexión
-if ($conn->connect_error) {
-    die("❌ Error de conexión: " . $conn->connect_error);
-}
+// 🔹 Incluir conexión usando variables de entorno de Railway
+require 'db.php';
 
 // ---------------------------------------------
 // 🔹 CONSULTAR LAS PELÍCULAS
