@@ -1,18 +1,15 @@
-# Imagen base: PHP + Apache
-FROM php:8.2-apache
+# Etapa 1: Imagen base
+FROM php:8.3-apache
 
-# Instalar extensiones MySQL
-RUN docker-php-ext-install mysqli pdo pdo_mysql
-
-# Copiar todo el contenido del proyecto
+# Copia tus archivos del backend al contenedor
 COPY . /var/www/html/
 
-# Establecer permisos
-RUN chown -R www-data:www-data /var/www/html
+# Da permisos a Apache
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# Exponer el puerto web
+# Expone el puerto 80
 EXPOSE 80
 
-# Comando de inicio
+# Inicia Apache
 CMD ["apache2-foreground"]
-
