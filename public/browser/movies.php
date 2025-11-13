@@ -2,9 +2,7 @@
 // 🔹 Conexión a la base de datos (Railway)
 require 'db.php';
 
-// ---------------------------------------------
-// 🔹 CONSULTAR TODAS LAS COLUMNAS DE LA TABLA movies
-// ---------------------------------------------
+// 🔹 Consultar todas las columnas de la tabla movies
 $sql = "SELECT * FROM movies";
 $result = $conn->query($sql);
 ?>
@@ -23,6 +21,7 @@ $result = $conn->query($sql);
         color: #fff;
         text-align: center;
         padding: 20px;
+        margin: 0;
     }
 
     h1 {
@@ -32,13 +31,14 @@ $result = $conn->query($sql);
 
     .btn {
         display: inline-block;
-        padding: 10px 20px;
+        padding: 8px 16px;
         background-color: #007bff;
         color: white;
         border-radius: 5px;
         text-decoration: none;
-        margin: 10px;
+        margin: 5px;
         transition: background 0.3s;
+        font-size: 0.9em;
     }
 
     .btn:hover {
@@ -46,7 +46,8 @@ $result = $conn->query($sql);
     }
 
     table {
-        width: 90%;
+        width: 100%;
+        max-width: 100%;
         margin: 20px auto;
         border-collapse: collapse;
         background: rgba(0, 0, 0, 0.75);
@@ -56,8 +57,9 @@ $result = $conn->query($sql);
     }
 
     th, td {
-        padding: 12px;
+        padding: 8px;
         border-bottom: 1px solid #444;
+        font-size: 0.9em;
     }
 
     th {
@@ -77,8 +79,51 @@ $result = $conn->query($sql);
 
     img {
         border-radius: 6px;
-        max-width: 100px;
+        max-width: 80px;
         height: auto;
+    }
+
+    /* Responsive para móviles */
+    @media (max-width: 768px) {
+        table, thead, tbody, th, td, tr {
+            display: block;
+        }
+
+        thead {
+            display: none;
+        }
+
+        tr {
+            margin-bottom: 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        td {
+            padding: 6px;
+            text-align: right;
+            position: relative;
+        }
+
+        td::before {
+            content: attr(data-label);
+            position: absolute;
+            left: 10px;
+            width: 50%;
+            padding-right: 10px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        img {
+            max-width: 60px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.8em;
+        }
     }
 </style>
 </head>
@@ -92,7 +137,6 @@ $result = $conn->query($sql);
     <thead>
         <tr>
             <?php
-            // 🔹 Generar dinámicamente los encabezados según las columnas
             $fields = $result->fetch_fields();
             foreach ($fields as $field) {
                 echo "<th>" . htmlspecialchars($field->name) . "</th>";
@@ -108,7 +152,7 @@ $result = $conn->query($sql);
         ?>
         <tr>
             <?php foreach ($row as $key => $value): ?>
-            <td>
+            <td data-label="<?= htmlspecialchars($key) ?>">
                 <?php if ($key === 'image' && !empty($value)): ?>
                     <img src="assets/<?= htmlspecialchars($value) ?>" alt="<?= htmlspecialchars($row['title']) ?>">
                 <?php else: ?>
@@ -116,7 +160,7 @@ $result = $conn->query($sql);
                 <?php endif; ?>
             </td>
             <?php endforeach; ?>
-            <td>
+            <td data-label="Acciones">
                 <a href="edit_movie.php?id=<?= $row['id'] ?>" class="btn" style="background:#ffc107; color:#000;">✏️ Editar</a>
                 <a href="delete_movie.php?id=<?= $row['id'] ?>" class="btn" style="background:#dc3545;" onclick="return confirm('¿Seguro que quieres eliminar esta película?');">🗑️ Borrar</a>
             </td>
