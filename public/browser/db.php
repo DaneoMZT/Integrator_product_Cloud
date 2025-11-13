@@ -9,7 +9,7 @@ $conn = new mysqli($host, $user, $password, $database, $port);
 
 if ($conn->connect_error) {
     die("❌ Error de conexión: " . $conn->connect_error);
-} else {
-    echo "✅ Conexión exitosa a MySQL";
 }
-?>
+
+// ❌ NO hay echo aquí
+// ❌ NO cerrar el PHP con ?>
