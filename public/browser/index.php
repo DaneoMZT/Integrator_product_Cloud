@@ -1,80 +1,94 @@
+<?php
+// 🔹 Conexión a la base de datos (Railway)
+require 'db.php';
+
+// 🔹 Consultar todas las columnas de la tabla movies
+$sql = "SELECT * FROM movies";
+$result = $conn->query($sql);
+?>
+
 <!doctype html>
-<html lang="en" data-beasties-container>
+<html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>Catalogo_Peliculas</title>
-  <base href="./">
+  <title>Catálogo de Películas 🎬</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="#">
   <style>
-    /* Tu CSS actual sin cambios */
-    table th, table td {
-      padding: 10px;
-      text-align: left;
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
     }
-    table th {
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #444;
+    }
+    th {
       background-color: #333;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
-    table tr {
+    tr:nth-child(even) {
       background-color: #222;
     }
-    img {
-      border-radius: 5px;
-      width: 80px;
-      height: auto;
+    tr:hover {
+      background-color: #333;
+      transition: 0.3s;
     }
   </style>
-  <link rel="stylesheet" href="styles-M6P3YWOE.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="styles-M6P3YWOE.css"></noscript>
 </head>
 <body>
-  <app-root></app-root>
 
-  <!-- 🔹 Tabla de películas usando PHP -->
-  <?php
-  require 'db.php'; // Conexión a Railway
-  $sql = "SELECT id, title, description, year FROM movies";
-  $result = $conn->query($sql);
-  ?>
-  <div id="movies-container" style="width:80%; margin:20px auto; color:#fff;">
-    <h2>🎥 Catálogo de Películas</h2>
-    <?php if ($result && $result->num_rows > 0): ?>
-      <table style="width:100%; border-collapse: collapse; color:#fff; margin-top: 10px;">
+  <h1>🎥 Catálogo de Películas</h1>
+
+  <?php if ($result && $result->num_rows > 0): ?>
+    <table>
+      <thead>
         <tr>
-          <th>ID</th>
-          <th>Imagen</th>
-          <th>Título</th>
-          <th>Descripción</th>
-          <th>Año</th>
+          <?php
+          // 🔹 Generar los encabezados automáticamente, excepto 'image'
+          $fields = $result->fetch_fields();
+          foreach ($fields as $field) {
+            if ($field->name !== 'image') {
+              echo "<th>" . htmlspecialchars($field->name) . "</th>";
+            }
+          }
+          ?>
         </tr>
-        <?php while ($row = $result->fetch_assoc()): ?>
+      </thead>
+      <tbody>
+        <?php
+        // 🔹 Regresar el puntero al inicio del conjunto de resultados
+        $result->data_seek(0);
+        while ($row = $result->fetch_assoc()):
+        ?>
           <tr>
-            <td><?= htmlspecialchars($row['id']) ?></td>
-            <td>
-              <img src="assets/The_Matrix<?= $row['id'] ?>.jpg" 
-                   alt="<?= htmlspecialchars($row['title']) ?>">
-            </td>
-            <td><?= htmlspecialchars($row['title']) ?></td>
-            <td><?= htmlspecialchars($row['description']) ?></td>
-            <td><?= htmlspecialchars($row['year']) ?></td>
+            <?php foreach ($row as $key => $value): ?>
+              <?php if ($key !== 'image'): ?>
+                <td><?= htmlspecialchars($value) ?></td>
+              <?php endif; ?>
+            <?php endforeach; ?>
           </tr>
         <?php endwhile; ?>
-      </table>
-    <?php else: ?>
-      <p>No hay películas registradas.</p>
-    <?php endif; ?>
-  </div>
+      </tbody>
+    </table>
+  <?php else: ?>
+    <p>No hay películas registradas.</p>
+  <?php endif; ?>
 
-<script src="polyfills-B6TNHZQ6.js" type="module"></script>
-<script src="scripts-SQ7W6IC7.js" defer></script>
-<script src="main-E3VRN7CM.js" type="module"></script>
 </body>
-<footer>
-  <div class="footer-content">
-    <p>© 2025 Catálogo de Películas 🎬 | Desarrollado por <strong>Daniel Ruiz Beltrán</strong></p>
-    <p>Materia: <strong>Conceptualización de entornos de desarrollo de aplicaciones y servicios</strong></p>
-    <p>Código: <strong>399426381</strong></p>
-    <p>Correo: <a href="mailto:ruizdaneo@gmail.com">ruizdaneo@gmail.com</a></p>
-  </div>
-</footer>
 </html>
+
+<?php
+$conn->close();
+?>
