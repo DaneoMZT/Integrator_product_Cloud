@@ -1,8 +1,11 @@
 <?php
+// 🔹 Conexión a la base de datos (usa variables de entorno en Railway)
 require 'db.php';
 
-// 🔹 CONSULTAR LAS PELÍCULAS
-$sql = "SELECT id, title, description, year, image FROM movies";
+// ---------------------------------------------
+// 🔹 CONSULTAR TODAS LAS COLUMNAS DE LA TABLA movies
+// ---------------------------------------------
+$sql = "SELECT * FROM movies";
 $result = $conn->query($sql);
 ?>
 
@@ -59,27 +62,31 @@ $result = $conn->query($sql);
     <table>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Imagen</th>
-          <th>Título</th>
-          <th>Descripción</th>
-          <th>Año</th>
+          <?php
+          // 🔹 Generar dinámicamente los encabezados según las columnas de la base de datos
+          $fields = $result->fetch_fields();
+          foreach ($fields as $field) {
+              echo "<th>" . htmlspecialchars($field->name) . "</th>";
+          }
+          ?>
         </tr>
       </thead>
       <tbody>
-        <?php while ($row = $result->fetch_assoc()): ?>
+        <?php
+        // 🔹 Regresar el puntero al inicio y recorrer todos los registros
+        $result->data_seek(0);
+        while ($row = $result->fetch_assoc()):
+        ?>
           <tr>
-            <td><?= htmlspecialchars($row['id']) ?></td>
-            <td>
-              <?php if (!empty($row['image'])): ?>
-                <img src="<?= htmlspecialchars($row['image']) ?>" alt="Imagen de <?= htmlspecialchars($row['title']) ?>">
-              <?php else: ?>
-                <span>Sin imagen</span>
-              <?php endif; ?>
-            </td>
-            <td><?= htmlspecialchars($row['title']) ?></td>
-            <td><?= htmlspecialchars($row['description']) ?></td>
-            <td><?= htmlspecialchars($row['year']) ?></td>
+            <?php foreach ($row as $key => $value): ?>
+              <td>
+                <?php if ($key === 'image' && !empty($value)): ?>
+                  <img src="<?= htmlspecialchars($value) ?>" alt="Imagen" width="100">
+                <?php else: ?>
+                  <?= htmlspecialchars($value) ?>
+                <?php endif; ?>
+              </td>
+            <?php endforeach; ?>
           </tr>
         <?php endwhile; ?>
       </tbody>
