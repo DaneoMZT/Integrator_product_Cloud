@@ -1,11 +1,8 @@
 <?php
-// 🔹 Conexión a la base de datos (usa variables de entorno en Railway)
 require 'db.php';
 
-// ---------------------------------------------
 // 🔹 CONSULTAR LAS PELÍCULAS
-// ---------------------------------------------
-$sql = "SELECT id, title, description, year FROM movies";
+$sql = "SELECT id, title, description, year, image FROM movies";
 $result = $conn->query($sql);
 ?>
 
@@ -47,6 +44,11 @@ $result = $conn->query($sql);
       background-color: #333;
       transition: 0.3s;
     }
+    img {
+      border-radius: 6px;
+      max-width: 100px;
+      height: auto;
+    }
   </style>
 </head>
 <body>
@@ -58,6 +60,7 @@ $result = $conn->query($sql);
       <thead>
         <tr>
           <th>ID</th>
+          <th>Imagen</th>
           <th>Título</th>
           <th>Descripción</th>
           <th>Año</th>
@@ -67,6 +70,13 @@ $result = $conn->query($sql);
         <?php while ($row = $result->fetch_assoc()): ?>
           <tr>
             <td><?= htmlspecialchars($row['id']) ?></td>
+            <td>
+              <?php if (!empty($row['image'])): ?>
+                <img src="<?= htmlspecialchars($row['image']) ?>" alt="Imagen de <?= htmlspecialchars($row['title']) ?>">
+              <?php else: ?>
+                <span>Sin imagen</span>
+              <?php endif; ?>
+            </td>
             <td><?= htmlspecialchars($row['title']) ?></td>
             <td><?= htmlspecialchars($row['description']) ?></td>
             <td><?= htmlspecialchars($row['year']) ?></td>
