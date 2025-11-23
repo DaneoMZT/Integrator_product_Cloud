@@ -159,8 +159,8 @@ $result = $conn->query($sql);
             <td data-label="<?= htmlspecialchars($key) ?>">
 
                 <?php if ($key === 'image' && !empty($value)): ?>
-                    <img src="/browser/assets/<?= htmlspecialchars($value) ?>" 
-                         alt="<?= htmlspecialchars($row['title']) ?>">
+                    <img src="/assets/<?= htmlspecialchars($value) ?>" 
+                        alt="<?= htmlspecialchars($row['title']) ?>">
 
                 <?php elseif ($key === 'trailer_url'): ?>
                     <?php if (!empty($value)): ?>
