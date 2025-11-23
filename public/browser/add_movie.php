@@ -42,71 +42,106 @@ if (is_dir($assetDir)) {
         background: #111 url('assets/fondo_rick_morty.webp') no-repeat center center fixed;
         background-size: cover;
         color: #fff;
-        text-align: center;
-        padding: 20px;
         margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
     }
 
-    h1 { margin-bottom: 20px; text-shadow: 2px 2px 4px #000; }
+    h1 {
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px #000;
+    }
 
     form {
         margin: 20px auto;
         background: rgba(0,0,0,0.75);
         padding: 20px;
-        width: 400px;
+        width: 100%;
+        max-width: 400px;
         border-radius: 8px;
+        box-sizing: border-box;
+        text-align: left;
     }
 
-    input, textarea, select {
-        width: 90%;
-        padding: 8px;
+    input, textarea, select, button {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px;
         margin: 10px 0;
         border-radius: 5px;
         border: none;
     }
 
     button {
-        padding: 10px 20px;
         background: #007bff;
         color: white;
-        border: none;
-        border-radius: 5px;
         cursor: pointer;
+        transition: background 0.3s;
     }
 
-    button:hover { background: #0056b3; }
+    button:hover {
+        background: #0056b3;
+    }
+
+    .info-blanca {
+        color: white;
+        text-align: center;
+        margin-bottom: 10px;
+        font-weight: bold;
+        text-shadow: 1px 1px 3px #000;
+    }
+
+    a.btn {
+        display: inline-block;
+        margin-top: 10px;
+        background: #ffc107;
+        color: #000;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        text-align: center;
+    }
 
     @media (max-width: 480px) {
-        form { width: 90%; padding: 15px; }
-        input, textarea, select, button { width: 100%; }
+        form { 
+            width: 95%; 
+            padding: 15px; 
+        }
     }
 </style>
 </head>
 <body>
 
-<h1>➕ Agregar Película</h1>
+<div>
+    <h1>➕ Agregar Película</h1>
 
-<form method="POST">
-    <input type="text" name="title" placeholder="Título" required><br>
-    <input type="text" name="director" placeholder="Director" required><br>
-    <input type="number" name="year" placeholder="Año"><br>
-    <textarea name="description" placeholder="Descripción"></textarea><br>
+    <p class="info-blanca">Esta película requiere contraseña para ser eliminada.</p>
 
-    <!-- Select para elegir imagen -->
-    <select name="image" required>
-        <option value="">-- Selecciona una imagen --</option>
-        <?php foreach ($images as $img): ?>
-            <option value="<?= htmlspecialchars($img) ?>"><?= htmlspecialchars($img) ?></option>
-        <?php endforeach; ?>
-    </select><br>
+    <form method="POST">
+        <input type="text" name="title" placeholder="Título" required>
+        <input type="text" name="director" placeholder="Director" required>
+        <input type="number" name="year" placeholder="Año">
+        <textarea name="description" placeholder="Descripción"></textarea>
 
-    <!-- Campo para trailer_url -->
-    <input type="url" name="trailer_url" placeholder="URL del tráiler (YouTube)"><br>
+        <!-- Select para elegir imagen -->
+        <select name="image" required>
+            <option value="">-- Selecciona una imagen --</option>
+            <?php foreach ($images as $img): ?>
+                <option value="<?= htmlspecialchars($img) ?>"><?= htmlspecialchars($img) ?></option>
+            <?php endforeach; ?>
+        </select>
 
-    <button type="submit">Agregar</button>
-</form>
+        <!-- Campo para trailer_url -->
+        <input type="url" name="trailer_url" placeholder="URL del tráiler (YouTube)">
 
-<a href="movies.php" class="btn" style="display:inline-block; margin-top:10px; background:#ffc107; color:#000; text-decoration:none; padding:8px 16px; border-radius:5px;">⬅ Volver</a>
+        <button type="submit">Agregar</button>
+    </form>
+
+    <a href="movies.php" class="btn">⬅ Volver</a>
+</div>
 
 </body>
 </html>
