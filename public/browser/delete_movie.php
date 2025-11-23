@@ -76,7 +76,7 @@ if (in_array($id, $protected_ids)) {
     <body>
         <h1>⚠️ Película Protegida</h1>
         <p>Esta película requiere contraseña para ser eliminada.</p>
-        <img src="/browser/assets/fondo_rick_morty.webp" alt="Rick y Morty">
+        <img src="/assets/fondo_rick_morty.webp" alt="Rick y Morty">
         <form method="POST">
             <input type="password" name="password" placeholder="Ingrese la contraseña" required><br>
             <button type="submit">Borrar</button>
