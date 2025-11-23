@@ -7,9 +7,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $year = $_POST['year'];
     $description = $_POST['description'];
     $image = $_POST['image']; // nombre del archivo seleccionado en assets/
+    $trailer_url = $_POST['trailer_url']; // enlace del tráiler
 
-    $stmt = $conn->prepare("INSERT INTO movies (title, director, year, description, image) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssiss", $title, $director, $year, $description, $image);
+    $stmt = $conn->prepare("INSERT INTO movies (title, director, year, description, image, trailer_url) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssisss", $title, $director, $year, $description, $image, $trailer_url);
     $stmt->execute();
 
     header("Location: movies.php");
@@ -98,6 +99,9 @@ if (is_dir($assetDir)) {
             <option value="<?= htmlspecialchars($img) ?>"><?= htmlspecialchars($img) ?></option>
         <?php endforeach; ?>
     </select><br>
+
+    <!-- Campo para trailer_url -->
+    <input type="url" name="trailer_url" placeholder="URL del tráiler (YouTube)"><br>
 
     <button type="submit">Agregar</button>
 </form>
