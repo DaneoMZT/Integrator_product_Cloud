@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $director = $_POST['director'];
     $year = $_POST['year'];
     $description = $_POST['description'];
-    $image = $_POST['image']; // nombre del archivo en assets/
+    $image = $_POST['image']; // nombre del archivo seleccionado en assets/
 
     $stmt = $conn->prepare("INSERT INTO movies (title, director, year, description, image) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("ssiss", $title, $director, $year, $description, $image);
@@ -14,6 +14,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     header("Location: movies.php");
     exit();
+}
+
+// Obtener lista de imágenes de la carpeta assets/
+$images = [];
+$assetDir = __DIR__ . '/assets/';
+if (is_dir($assetDir)) {
+    $files = scandir($assetDir);
+    foreach ($files as $file) {
+        if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'webp', 'gif'])) {
+            $images[] = $file;
+        }
+    }
 }
 ?>
 
@@ -34,10 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         margin: 0;
     }
 
-    h1 {
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px #000;
-    }
+    h1 { margin-bottom: 20px; text-shadow: 2px 2px 4px #000; }
 
     form {
         margin: 20px auto;
@@ -47,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         border-radius: 8px;
     }
 
-    input, textarea {
+    input, textarea, select {
         width: 90%;
         padding: 8px;
         margin: 10px 0;
@@ -64,20 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         cursor: pointer;
     }
 
-    button:hover {
-        background: #0056b3;
-    }
+    button:hover { background: #0056b3; }
 
-    /* Responsive */
     @media (max-width: 480px) {
-        form {
-            width: 90%;
-            padding: 15px;
-        }
-
-        input, textarea, button {
-            width: 100%;
-        }
+        form { width: 90%; padding: 15px; }
+        input, textarea, select, button { width: 100%; }
     }
 </style>
 </head>
@@ -90,7 +90,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="text" name="director" placeholder="Director" required><br>
     <input type="number" name="year" placeholder="Año"><br>
     <textarea name="description" placeholder="Descripción"></textarea><br>
-    <input type="text" name="image" placeholder="Nombre archivo en assets (ej: peli1.jpg)"><br>
+
+    <!-- Select para elegir imagen -->
+    <select name="image" required>
+        <option value="">-- Selecciona una imagen --</option>
+        <?php foreach ($images as $img): ?>
+            <option value="<?= htmlspecialchars($img) ?>"><?= htmlspecialchars($img) ?></option>
+        <?php endforeach; ?>
+    </select><br>
+
     <button type="submit">Agregar</button>
 </form>
 
