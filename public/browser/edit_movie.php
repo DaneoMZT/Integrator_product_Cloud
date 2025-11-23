@@ -10,11 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $director = $_POST['director'];
     $year = $_POST['year'];
     $description = $_POST['description'];
-    $trailer_url = $_POST['trailer_url'];
 
     // Actualizar solo los campos editables
-    $stmt = $conn->prepare("UPDATE movies SET title=?, director=?, year=?, description=?, trailer_url=? WHERE id=?");
-    $stmt->bind_param("ssissi", $title, $director, $year, $description, $trailer_url, $id);
+    $stmt = $conn->prepare("UPDATE movies SET title=?, director=?, year=?, description=? WHERE id=?");
+    $stmt->bind_param("ssisi", $title, $director, $year, $description, $id);
     $stmt->execute();
 
     header("Location: movies.php");
@@ -94,11 +93,9 @@ $movie = $result->fetch_assoc();
     <input type="number" name="year" value="<?= htmlspecialchars($movie['year']) ?>" placeholder="Año"><br>
     <textarea name="description" placeholder="Descripción"><?= htmlspecialchars($movie['description']) ?></textarea><br>
     
-    <!-- Campo de imagen bloqueado -->
-    <input type="text" value="<?= htmlspecialchars($movie['image']) ?>" readonly><br>
-
-    <!-- Nuevo campo trailer_url -->
-    <input type="text" name="trailer_url" value="<?= htmlspecialchars($movie['trailer_url']) ?>" placeholder="URL del tráiler"><br>
+    <!-- Campos bloqueados -->
+    <input type="text" value="<?= htmlspecialchars($movie['image']) ?>" readonly placeholder="Imagen"><br>
+    <input type="text" value="<?= htmlspecialchars($movie['trailer_url']) ?>" readonly placeholder="URL del tráiler"><br>
 
     <button type="submit">Actualizar</button>
 </form>
