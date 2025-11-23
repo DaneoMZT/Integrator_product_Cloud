@@ -13,6 +13,17 @@ $result = $conn->query($sql);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catálogo de Películas 🎬</title>
 
+<!-- Recargar página automáticamente al abrir -->
+<script>
+window.onload = function(){
+    // Solo recargar una vez para asegurar que todo se cargue
+    if(!sessionStorage.getItem('moviesReloaded')){
+        sessionStorage.setItem('moviesReloaded','true');
+        location.reload();
+    }
+}
+</script>
+
 <style>
 body {
     font-family: Arial, sans-serif;
