@@ -9,10 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $director = $_POST['director'];
     $year = $_POST['year'];
     $description = $_POST['description'];
-    $image = $_POST['image'];
+    // $image = $_POST['image'];  <- Eliminado para no actualizar la imagen
 
-    $stmt = $conn->prepare("UPDATE movies SET title=?, director=?, year=?, description=?, image=? WHERE id=?");
-    $stmt->bind_param("ssissi", $title, $director, $year, $description, $image, $id);
+    // Actualizamos solo los campos que queremos permitir editar
+    $stmt = $conn->prepare("UPDATE movies SET title=?, director=?, year=?, description=? WHERE id=?");
+    $stmt->bind_param("ssisi", $title, $director, $year, $description, $id);
     $stmt->execute();
 
     header("Location: movies.php");
@@ -40,10 +41,7 @@ $movie = $result->fetch_assoc();
         margin: 0;
     }
 
-    h1 {
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px #000;
-    }
+    h1 { margin-bottom: 20px; text-shadow: 2px 2px 4px #000; }
 
     form {
         margin: 20px auto;
@@ -61,6 +59,12 @@ $movie = $result->fetch_assoc();
         border: none;
     }
 
+    input[readonly] {
+        background: #333;
+        color: #bbb;
+        cursor: not-allowed;
+    }
+
     button {
         padding: 10px 20px;
         background: #ffc107;
@@ -70,20 +74,11 @@ $movie = $result->fetch_assoc();
         cursor: pointer;
     }
 
-    button:hover {
-        background: #e0a800;
-    }
+    button:hover { background: #e0a800; }
 
-    /* Responsive */
     @media (max-width: 480px) {
-        form {
-            width: 90%;
-            padding: 15px;
-        }
-
-        input, textarea, button {
-            width: 100%;
-        }
+        form { width: 90%; padding: 15px; }
+        input, textarea, button { width: 100%; }
     }
 </style>
 </head>
@@ -96,7 +91,10 @@ $movie = $result->fetch_assoc();
     <input type="text" name="director" value="<?= htmlspecialchars($movie['director']) ?>" placeholder="Director" required><br>
     <input type="number" name="year" value="<?= htmlspecialchars($movie['year']) ?>" placeholder="Año"><br>
     <textarea name="description" placeholder="Descripción"><?= htmlspecialchars($movie['description']) ?></textarea><br>
-    <input type="text" name="image" value="<?= htmlspecialchars($movie['image']) ?>" placeholder="Nombre archivo en assets"><br>
+    
+    <!-- Campo de imagen bloqueado -->
+    <input type="text" value="<?= htmlspecialchars($movie['image']) ?>" readonly><br>
+
     <button type="submit">Actualizar</button>
 </form>
 
