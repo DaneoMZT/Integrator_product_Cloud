@@ -8,7 +8,7 @@
 <style>
 body {
     font-family: Arial, sans-serif;
-    background: #111 url('/browser/assets/fondo_rick_morty.webp') no-repeat center center fixed;
+    background: #111 url('/assets/fondo_rick_morty.webp') no-repeat center center fixed;
     background-size: cover;
     color: #fff;
     text-align: center;
