@@ -27,7 +27,7 @@ window.onload = function(){
 <style>
 body {
     font-family: Arial, sans-serif;
-    background: #111 url('/browser/assets/fondo_rick_morty.webp') no-repeat center center fixed;
+    background: #111 url('/assets/fondo_rick_morty.webp') no-repeat center center fixed;
     background-size: cover;
     color: #fff;
     text-align: center;
@@ -98,7 +98,7 @@ foreach ($fields as $field) echo "<th>".htmlspecialchars($field->name)."</th>";
 <?php foreach ($row as $key => $value): ?>
 <td data-label="<?= htmlspecialchars($key) ?>">
 <?php if($key==='image' && !empty($value)): ?>
-<img src="/browser/assets/<?= htmlspecialchars($value) ?>" alt="<?= htmlspecialchars($row['title']) ?>">
+<img src="/assets/<?= htmlspecialchars($value) ?>" alt="<?= htmlspecialchars($row['title']) ?>">
 <?php elseif($key==='trailer_url'): ?>
 <?php if(!empty($value)): ?>
 <a class="btn" href="#" onclick="openTrailer('<?= htmlspecialchars($value) ?>')">🎬 Ver Tráiler</a>
