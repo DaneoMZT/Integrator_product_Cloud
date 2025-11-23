@@ -35,7 +35,7 @@ if (in_array($id, $protected_ids)) {
                 margin: 0;
                 padding: 0;
                 height: 100vh;
-                background: url('/assets/fondo_rick_morty.webp') no-repeat center center fixed;
+                background: url('/assets/Rick_Morty.jpg') no-repeat center center fixed;
                 background-size: cover;
                 display: flex;
                 justify-content: center;
