@@ -13,17 +13,6 @@ $result = $conn->query($sql);
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catálogo de Películas 🎬</title>
 
-<!-- Recargar página automáticamente al abrir -->
-<script>
-window.onload = function(){
-    // Solo recargar una vez para asegurar que todo se cargue
-    if(!sessionStorage.getItem('moviesReloaded')){
-        sessionStorage.setItem('moviesReloaded','true');
-        location.reload();
-    }
-}
-</script>
-
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -31,9 +20,10 @@ body {
     background-size: cover;
     color: #fff;
     text-align: center;
-    padding: 20px;
     margin: 0;
+    padding: 20px;
 }
+
 h1 { text-shadow: 2px 2px 4px #000; margin-bottom: 20px; }
 
 .btn {
@@ -45,25 +35,53 @@ h1 { text-shadow: 2px 2px 4px #000; margin-bottom: 20px; }
     text-decoration: none;
     margin: 5px;
     transition: 0.3s;
-    font-size: 0.9em;
     cursor: pointer;
+    font-size: 0.9em;
 }
 .btn:hover { background-color: #0056b3; }
 
-table {
-    width: 100%;
-    margin: 20px auto;
-    border-collapse: collapse;
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card {
     background: rgba(0,0,0,0.75);
     border-radius: 10px;
-    overflow: hidden;
+    padding: 15px;
+    width: 250px;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    text-align: left;
+    transition: transform 0.3s;
 }
-th, td { padding: 8px; border-bottom: 1px solid #444; font-size: 0.9em; }
-th { background-color: #222; text-transform: uppercase; letter-spacing: 1px; }
-tr:nth-child(even) { background-color: #1a1a1a; }
-tr:hover { background-color: #333; transition: 0.3s; }
-img { border-radius: 6px; max-width: 80px; height: auto; }
+
+.card:hover { transform: scale(1.03); }
+
+.card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.card h2 {
+    font-size: 1.2em;
+    margin: 5px 0;
+}
+
+.card p {
+    font-size: 0.9em;
+    margin: 5px 0;
+}
+
+.card .actions {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+}
 
 #trailerModal {
     display:none; position:fixed; z-index:9999; padding-top:60px; left:0; top:0;
@@ -72,7 +90,11 @@ img { border-radius: 6px; max-width: 80px; height: auto; }
 #trailerContent { margin:auto; background:#000; width:90%; max-width:800px; padding:10px; border-radius:10px; position:relative; }
 #closeTrailer { position:absolute; top:-25px; right:-25px; background:red; color:#fff; padding:10px 15px; border-radius:50%; cursor:pointer; font-size:20px; }
 iframe { width:100%; height:450px; border-radius:10px; }
-@media (max-width:768px){ iframe { height:250px; } }
+
+@media (max-width: 600px) {
+    .card { width: 90%; }
+    iframe { height:250px; }
+}
 </style>
 </head>
 <body>
@@ -81,47 +103,32 @@ iframe { width:100%; height:450px; border-radius:10px; }
 <a href="add_movie.php" class="btn">➕ Agregar Película</a>
 <a href="index.php" class="btn" style="background:#17a2b8;">🏠 Inicio</a>
 
+<div class="cards-container">
 <?php if ($result && $result->num_rows > 0): ?>
-<table>
-<thead>
-<tr>
-<?php
-$fields = $result->fetch_fields();
-foreach ($fields as $field) echo "<th>".htmlspecialchars($field->name)."</th>";
-?>
-<th>Acciones</th>
-</tr>
-</thead>
-<tbody>
-<?php while ($row = $result->fetch_assoc()): ?>
-<tr>
-<?php foreach ($row as $key => $value): ?>
-<td data-label="<?= htmlspecialchars($key) ?>">
-<?php if($key==='image' && !empty($value)): ?>
-<img src="/assets/<?= htmlspecialchars($value) ?>" alt="<?= htmlspecialchars($row['title']) ?>">
-<?php elseif($key==='trailer_url'): ?>
-<?php if(!empty($value)): ?>
-<a class="btn" href="#" onclick="openTrailer('<?= htmlspecialchars($value) ?>')">🎬 Ver Tráiler</a>
+    <?php while ($row = $result->fetch_assoc()): ?>
+    <div class="card">
+        <?php if(!empty($row['image'])): ?>
+            <img src="/assets/<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['title']) ?>">
+        <?php endif; ?>
+        <h2><?= htmlspecialchars($row['title']) ?></h2>
+        <p><strong>Director:</strong> <?= htmlspecialchars($row['director']) ?></p>
+        <p><strong>Año:</strong> <?= htmlspecialchars($row['year']) ?></p>
+        <p><?= htmlspecialchars($row['description']) ?></p>
+        <div class="actions">
+            <?php if(!empty($row['trailer_url'])): ?>
+                <a class="btn" href="#" onclick="openTrailer('<?= htmlspecialchars($row['trailer_url']) ?>')">🎬 Tráiler</a>
+            <?php else: ?>
+                <span style="color:#bbb; font-size:0.8em;">Sin tráiler</span>
+            <?php endif; ?>
+            <a class="btn" href="edit_movie.php?id=<?= $row['id'] ?>" style="background:#ffc107; color:#000;">✏️ Editar</a>
+            <a class="btn" href="delete_movie.php?id=<?= $row['id'] ?>" style="background:#dc3545;" onclick="return confirm('¿Seguro que quieres eliminar esta película?');">🗑️ Borrar</a>
+        </div>
+    </div>
+    <?php endwhile; ?>
 <?php else: ?>
-<span style="color:#bbb;">Sin tráiler</span>
+    <p>No hay películas registradas.</p>
 <?php endif; ?>
-<?php else: ?>
-<?= htmlspecialchars($value) ?>
-<?php endif; ?>
-</td>
-<?php endforeach; ?>
-
-<td data-label="Acciones">
-<a href="edit_movie.php?id=<?= $row['id'] ?>" class="btn" style="background:#ffc107; color:#000;">✏️ Editar</a>
-<a href="delete_movie.php?id=<?= $row['id'] ?>" class="btn" style="background:#dc3545;" onclick="return confirm('¿Seguro que quieres eliminar esta película?');">🗑️ Borrar</a>
-</td>
-</tr>
-<?php endwhile; ?>
-</tbody>
-</table>
-<?php else: ?>
-<p>No hay películas registradas.</p>
-<?php endif; ?>
+</div>
 
 <div id="trailerModal">
 <div id="trailerContent">
