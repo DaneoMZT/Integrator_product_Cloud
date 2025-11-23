@@ -96,13 +96,16 @@ if (in_array($id, $protected_ids)) {
                 padding: 8px 16px;
                 border-radius: 5px;
             }
-
+            
+            .texto-blanco {
+            color: white; width
+            }
         </style>
     </head>
     <body>
         <div class="overlay">
             <h1>⚠️ Película Protegida</h1>
-            <p>Esta película requiere contraseña para ser eliminada.</p>
+            <p class="texto-blanco">Esta película requiere contraseña para ser eliminada.</p>
             <form method="POST">
                 <input type="password" name="password" placeholder="Ingrese la contraseña" required><br>
                 <button type="submit">Borrar</button>
