@@ -5,14 +5,11 @@ $id = $_GET['id'] ?? null;
 $protected_ids = [2, 3, 5, 8, 10];
 $correct_password = "abc123";
 
-// Validar que exista un ID
 if (!$id) {
     die("ID no válido");
 }
 
-// Si la película es protegida
 if (in_array($id, $protected_ids)) {
-    // Si se envió el formulario con contraseña
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password = $_POST['password'] ?? '';
         if ($password === $correct_password) {
@@ -25,8 +22,6 @@ if (in_array($id, $protected_ids)) {
             $error = "Contraseña incorrecta";
         }
     }
-
-    // Mostrar formulario de contraseña
     ?>
     <!DOCTYPE html>
     <html lang="es">
@@ -37,58 +32,89 @@ if (in_array($id, $protected_ids)) {
         <style>
             body {
                 font-family: Arial, sans-serif;
-                background: #111 url('/browser/assets/fondo_rick_morty.webp') no-repeat center center fixed;
+                margin: 0;
+                padding: 0;
+                height: 100vh;
+                background: url('/browser/assets/rick_morty.webp') no-repeat center center fixed;
                 background-size: cover;
-                color: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .overlay {
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(8px);
+                padding: 40px;
+                border-radius: 15px;
                 text-align: center;
-                padding: 20px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.6);
             }
-            form {
-                background: rgba(0,0,0,0.75);
-                display: inline-block;
-                padding: 20px;
-                border-radius: 8px;
-                margin-top: 20px;
+
+            h1 {
+                margin-bottom: 20px;
+                color: #fff;
+                text-shadow: 2px 2px 6px #000;
             }
+
             input, button {
-                padding: 10px;
+                padding: 12px;
                 margin: 10px 0;
-                border-radius: 5px;
+                border-radius: 6px;
                 border: none;
                 width: 80%;
+                font-size: 1em;
             }
+
+            input {
+                background: #222;
+                color: #fff;
+            }
+
             button {
                 background: #dc3545;
                 color: #fff;
                 cursor: pointer;
+                font-weight: bold;
             }
+
             button:hover {
                 background: #a71d2a;
             }
-            img {
-                max-width: 150px;
-                margin-bottom: 15px;
-                border-radius: 8px;
+
+            .error {
+                color: #ff5555;
+                margin-top: 10px;
             }
-            .error { color: #ff5555; margin-top: 10px; }
+
+            a {
+                display: inline-block;
+                margin-top: 15px;
+                color: #fff;
+                text-decoration: none;
+                background: #007bff;
+                padding: 8px 16px;
+                border-radius: 5px;
+            }
+
         </style>
     </head>
     <body>
-        <h1>⚠️ Película Protegida</h1>
-        <p>Esta película requiere contraseña para ser eliminada.</p>
-        <img src="/assets/fondo_rick_morty.webp" alt="Rick y Morty">
-        <form method="POST">
-            <input type="password" name="password" placeholder="Ingrese la contraseña" required><br>
-            <button type="submit">Borrar</button>
-            <?php if (!empty($error)) echo "<div class='error'>$error</div>"; ?>
-        </form>
-        <a href="movies.php" style="display:inline-block; margin-top:15px; color:#fff; text-decoration:none; background:#007bff; padding:8px 16px; border-radius:5px;">⬅ Volver</a>
+        <div class="overlay">
+            <h1>⚠️ Película Protegida</h1>
+            <p>Esta película requiere contraseña para ser eliminada.</p>
+            <form method="POST">
+                <input type="password" name="password" placeholder="Ingrese la contraseña" required><br>
+                <button type="submit">Borrar</button>
+                <?php if (!empty($error)) echo "<div class='error'>$error</div>"; ?>
+            </form>
+            <a href="movies.php">⬅ Volver</a>
+        </div>
     </body>
     </html>
     <?php
     exit();
 } else {
-    // Películas no protegidas se borran directamente
     $stmt = $conn->prepare("DELETE FROM movies WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
