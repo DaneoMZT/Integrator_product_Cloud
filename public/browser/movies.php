@@ -16,7 +16,7 @@ $result = $conn->query($sql);
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: #111 url('assets/fondo_rick_morty.webp') no-repeat center center fixed;
+        background: #111 url('/assets/fondo_rick_morty.webp') no-repeat center center fixed;
         background-size: cover;
         color: #fff;
         text-align: center;
@@ -47,7 +47,6 @@ $result = $conn->query($sql);
 
     table {
         width: 100%;
-        max-width: 100%;
         margin: 20px auto;
         border-collapse: collapse;
         background: rgba(0, 0, 0, 0.75);
@@ -125,13 +124,11 @@ $result = $conn->query($sql);
         border-radius: 10px;
     }
 
-    /* Responsive */
     @media (max-width: 768px) {
         iframe {
             height: 250px;
         }
     }
-
 </style>
 </head>
 <body>
@@ -152,8 +149,8 @@ $result = $conn->query($sql);
             <th>Acciones</th>
         </tr>
     </thead>
-    <tbody>
 
+    <tbody>
         <?php
         $result->data_seek(0);
         while ($row = $result->fetch_assoc()):
@@ -163,7 +160,7 @@ $result = $conn->query($sql);
             <td data-label="<?= htmlspecialchars($key) ?>">
 
                 <?php if ($key === 'image' && !empty($value)): ?>
-                    <img src="assets/<?= htmlspecialchars($value) ?>" alt="<?= htmlspecialchars($row['title']) ?>">
+                    <img src="/assets/<?= htmlspecialchars($value) ?>" alt="<?= htmlspecialchars($row['title']) ?>">
 
                 <?php elseif ($key === 'trailer_url'): ?>
                     <?php if (!empty($value)): ?>
@@ -185,14 +182,13 @@ $result = $conn->query($sql);
             </td>
         </tr>
         <?php endwhile; ?>
-
     </tbody>
 </table>
 <?php else: ?>
 <p>No hay películas registradas.</p>
 <?php endif; ?>
 
-<!-- Modal para ver trailer -->
+<!-- Modal -->
 <div id="trailerModal">
     <div id="trailerContent">
         <span id="closeTrailer" onclick="closeTrailer()">✖</span>
@@ -201,11 +197,9 @@ $result = $conn->query($sql);
 </div>
 
 <script>
-// Abrir modal y cargar tráiler
 function openTrailer(url) {
     document.getElementById("trailerModal").style.display = "block";
 
-    // Si es un link normal de YouTube lo convertimos a embed
     if (url.includes("watch?v=")) {
         url = url.replace("watch?v=", "embed/");
     }
@@ -213,13 +207,11 @@ function openTrailer(url) {
     document.getElementById("trailerFrame").src = url;
 }
 
-// Cerrar modal
 function closeTrailer() {
     document.getElementById("trailerModal").style.display = "none";
-    document.getElementById("trailerFrame").src = ""; // detener el video
+    document.getElementById("trailerFrame").src = "";
 }
 
-// Cerrar haciendo clic afuera
 window.onclick = function(event) {
     let modal = document.getElementById("trailerModal");
     if (event.target === modal) {
